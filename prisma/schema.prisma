@@ -1,0 +1,208 @@
+// This is your Prisma schema file
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model User {
+  id           String   @id @default(uuid())
+  email        String   @unique
+  passwordHash String
+  role         String   // ADMIN, INSPECTOR, DEALER, AUDITOR, BENEFICIARY, PUBLIC
+  name         String
+  beneficiaryId String?
+  beneficiary   Beneficiary? @relation(fields: [beneficiaryId], references: [id])
+  
+  assignedCases    Case[]            @relation("AssignedCases")
+  inspectorActions InspectorAction[]
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model District {
+  id            String        @id @default(uuid())
+  name          String
+  shops         FPSShop[]
+  beneficiaries Beneficiary[]
+  createdAt     DateTime      @default(now())
+}
+
+model FPSShop {
+  id         String   @id @default(uuid())
+  districtId String
+  district   District @relation(fields: [districtId], references: [id])
+  
+  shopCode   String   @unique
+  name       String
+  zone       String
+  address    String
+  lat        Float
+  lng        Float
+  
+  riskScore  Float    @default(0)
+  
+  transactions Transaction[]
+  stockLogs    StockLog[]
+  alerts       Alert[]
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Beneficiary {
+  id            String   @id @default(uuid())
+  rationCardId  String   @unique
+  name          String
+  age           Int
+  gender        String
+  familySize    Int
+  aadhaarMasked String
+  address       String
+  phoneNumber   String?
+  refPhotoUrl   String?
+  
+  districtId String
+  district   District @relation(fields: [districtId], references: [id])
+  
+  entitlements Entitlement[]
+  transactions Transaction[]
+  alerts       Alert[]
+  users        User[]
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Entitlement {
+  id            String      @id @default(uuid())
+  beneficiaryId String
+  beneficiary   Beneficiary @relation(fields: [beneficiaryId], references: [id])
+  
+  month   String  // YYYY-MM format
+  riceKg  Float
+  wheatKg Float
+  sugarKg Float
+  
+  createdAt DateTime @default(now())
+  
+  @@unique([beneficiaryId, month])
+}
+
+model Transaction {
+  id            String      @id @default(uuid())
+  beneficiaryId String
+  beneficiary   Beneficiary @relation(fields: [beneficiaryId], references: [id])
+  
+  fpsId String
+  fps   FPSShop @relation(fields: [fpsId], references: [id])
+  
+  dateTime DateTime @default(now())
+  
+  riceKg  Float
+  wheatKg Float
+  sugarKg Float
+  
+  authMethod String  // OTP, FACE, MANUAL
+  authStatus String  // SUCCESS, FAILED
+  
+  status String @default("CONFIRMED") // CONFIRMED, DISPUTED
+  
+  riskScore    Float  @default(0)
+  anomalyType  String?
+  anomalyFlags String? // JSON string of evidence
+  
+  alerts Alert[]
+  
+  createdAt DateTime @default(now())
+}
+
+model StockLog {
+  id     String  @id @default(uuid())
+  fpsId  String
+  fps    FPSShop @relation(fields: [fpsId], references: [id])
+  
+  dateTime DateTime @default(now())
+  
+  riceIn   Float @default(0)
+  riceOut  Float @default(0)
+  wheatIn  Float @default(0)
+  wheatOut Float @default(0)
+  sugarIn  Float @default(0)
+  sugarOut Float @default(0)
+  
+  createdAt DateTime @default(now())
+}
+
+model Alert {
+  id String @id @default(uuid())
+  
+  transactionId String?
+  transaction   Transaction? @relation(fields: [transactionId], references: [id])
+  
+  beneficiaryId String?
+  beneficiary   Beneficiary? @relation(fields: [beneficiaryId], references: [id])
+  
+  fpsId String?
+  fps   FPSShop? @relation(fields: [fpsId], references: [id])
+  
+  severity    String // LOW, MEDIUM, HIGH, CRITICAL
+  title       String
+  description String
+  evidence    String? // JSON string
+  
+  status String @default("OPEN") // OPEN, RESOLVED
+  
+  cases Case[]
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Case {
+  id      String @id @default(uuid())
+  alertId String
+  alert   Alert  @relation(fields: [alertId], references: [id])
+  
+  status String @default("OPEN") // OPEN, ASSIGNED, INVESTIGATING, RESOLVED
+  
+  assignedToId String?
+  assignedTo   User?   @relation("AssignedCases", fields: [assignedToId], references: [id])
+  
+  verdict String? // FRAUD_CONFIRMED, FALSE_POSITIVE, NEED_MORE_INFO
+  notes   String?
+  
+  actions InspectorAction[]
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model InspectorAction {
+  id         String @id @default(uuid())
+  caseId     String
+  case       Case   @relation(fields: [caseId], references: [id])
+  
+  inspectorId String
+  inspector   User   @relation(fields: [inspectorId], references: [id])
+  
+  actionType String // ASSIGNED, NOTE_ADDED, STATUS_CHANGED, VERDICT_GIVEN
+  notes      String?
+  
+  createdAt DateTime @default(now())
+}
+
+model AuditLog {
+  id          String @id @default(uuid())
+  eventType   String
+  metaJson    String
+  prevHash    String
+  currentHash String
+  
+  createdAt DateTime @default(now())
+}
