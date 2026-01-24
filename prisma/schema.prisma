@@ -5,21 +5,23 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
-  url      = "file:./dev.db"
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
 model User {
   id           String   @id @default(uuid())
   email        String   @unique
-  passwordHash String
+  passwordHash String   // bcrypt hash
   role         String   // ADMIN, INSPECTOR, DEALER, AUDITOR, BENEFICIARY, PUBLIC
   name         String
+  district     String?  // Geographic assignment for admins/inspectors
   beneficiaryId String?
   beneficiary   Beneficiary? @relation(fields: [beneficiaryId], references: [id])
   
   assignedCases    Case[]            @relation("AssignedCases")
   inspectorActions InspectorAction[]
+  complaints       Complaint[]       @relation("ComplaintResolver")
   
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -38,18 +40,26 @@ model FPSShop {
   districtId String
   district   District @relation(fields: [districtId], references: [id])
   
-  shopCode   String   @unique
-  name       String
-  zone       String
-  address    String
-  lat        Float
-  lng        Float
+  shopCode         String   @unique  // Government identifier
+  name             String
+  ownerName        String
+  contactPhone     String
+  licenseNumber    String
+  zone             String
+  address          String
+  pincode          String?
+  lat              Float
+  lng              Float
   
-  riskScore  Float    @default(0)
+  monthlyQuota        String   @default("{}") // JSON: {rice: 1000, wheat: 1500, sugar: 500}
+  operationalStatus   String   @default("ACTIVE") // ACTIVE, SUSPENDED, CLOSED
+  lastInspectionDate  DateTime?
+  riskScore           Float    @default(0)
   
   transactions Transaction[]
   stockLogs    StockLog[]
   alerts       Alert[]
+  complaints   Complaint[]
   
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -62,10 +72,18 @@ model Beneficiary {
   age           Int
   gender        String
   familySize    Int
+  incomeCategory String  @default("BPL") // BPL, APL, AAY
   aadhaarMasked String
   address       String
+  pincode       String?
   phoneNumber   String?
+  lat           Float?
+  lng           Float?
   refPhotoUrl   String?
+  
+  monthlyEntitlement String  @default("{}") // JSON: {rice: 5, wheat: 10, sugar: 2}
+  isActive           Boolean @default(true)
+  enrollmentDate     DateTime @default(now())
   
   districtId String
   district   District @relation(fields: [districtId], references: [id])
@@ -74,6 +92,7 @@ model Beneficiary {
   transactions Transaction[]
   alerts       Alert[]
   users        User[]
+  complaints   Complaint[]    @relation("BeneficiaryComplaints")
   
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -96,6 +115,7 @@ model Entitlement {
 
 model Transaction {
   id            String      @id @default(uuid())
+  transactionId String      @unique @default(cuid())
   beneficiaryId String
   beneficiary   Beneficiary @relation(fields: [beneficiaryId], references: [id])
   
@@ -107,6 +127,7 @@ model Transaction {
   riceKg  Float
   wheatKg Float
   sugarKg Float
+  totalValue Float @default(0) // Monetary value at subsidized rates
   
   authMethod String  // OTP, FACE, MANUAL
   authStatus String  // SUCCESS, FAILED
@@ -117,7 +138,11 @@ model Transaction {
   anomalyType  String?
   anomalyFlags String? // JSON string of evidence
   
-  alerts Alert[]
+  verifiedByBeneficiary Boolean?  // Crowdsourced validation
+  verificationDate      DateTime?
+  
+  alerts     Alert[]
+  complaints Complaint[]
   
   createdAt DateTime @default(now())
 }
@@ -205,4 +230,59 @@ model AuditLog {
   currentHash String
   
   createdAt DateTime @default(now())
+}
+
+model Complaint {
+  id          String @id @default(uuid())
+  complaintId String @unique @default(cuid())
+  
+  beneficiaryId String
+  beneficiary   Beneficiary @relation("BeneficiaryComplaints", fields: [beneficiaryId], references: [id])
+  
+  shopId      String?
+  shop        FPSShop? @relation(fields: [shopId], references: [id])
+  
+  transactionId String?
+  transaction   Transaction? @relation(fields: [transactionId], references: [id])
+  
+  complaintType String // NON_RECEIPT, QUANTITY_SHORT, QUALITY_ISSUE, OVERCHARGING, MISBEHAVIOR, OTHER
+  description   String
+  complaintDate DateTime @default(now())
+  
+  status   String @default("SUBMITTED") // SUBMITTED, ACKNOWLEDGED, UNDER_REVIEW, RESOLVED, CLOSED
+  priority String @default("MEDIUM")     // LOW, MEDIUM, HIGH
+  
+  resolutionNotes String?
+  resolvedById    String?
+  resolvedBy      User?   @relation("ComplaintResolver", fields: [resolvedById], references: [id])
+  resolutionDate  DateTime?
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  @@index([beneficiaryId])
+  @@index([shopId])
+  @@index([status])
+}
+
+model NetworkRelationship {
+  id String @id @default(uuid())
+  
+  sourceType String // BENEFICIARY, SHOP, INSPECTOR, DISTRIBUTOR
+  sourceId   String
+  
+  targetType String // BENEFICIARY, SHOP, INSPECTOR, DISTRIBUTOR
+  targetId   String
+  
+  relationshipType String // TRANSACTION, SHARED_ADDRESS, SHARED_CONTACT, TEMPORAL_CORRELATION, PATTERN_SIMILARITY
+  strength         Float  @default(0.5) // 0-1 connection confidence
+  metadata         String @default("{}") // JSON with additional context
+  
+  detectedDate DateTime @default(now())
+  createdAt    DateTime @default(now())
+  
+  @@index([sourceType, sourceId])
+  @@index([targetType, targetId])
+  @@index([relationshipType])
+  @@index([strength])
 }

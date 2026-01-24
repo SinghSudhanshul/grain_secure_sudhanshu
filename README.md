@@ -1,351 +1,286 @@
-# 🛡️ GrainSecure - AI-Enabled Intelligent PDS Monitoring Platform
+# 🚀 GrainSecure - AI-Enabled PDS Monitoring System
 
-> **Smart India Hackathon 2026** - Market-Ready Production Prototype
+> **Next-generation Public Distribution System monitoring with AI-powered fraud detection, ML model auto-upgrading, and Apple-inspired UI**
 
-A complete, production-grade web application that monitors Public Distribution System (PDS) transactions, detects fraud using explainable AI, manages cases like real governance systems, and provides real-time transparency through digital twin simulation.
+[![Next.js](https://img.shields.io/badge/Next.js-14-black)](https://nextjs.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue)](https://www.typescriptlang.org/)
+[![Prisma](https://img.shields.io/badge/Prisma-5.0-2D3748)](https://www.prisma.io/)
+[![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 
-![GrainSecure Banner](https://img.shields.io/badge/Status-Production--Ready-success?style=for-the-badge)
-![Next.js](https://img.shields.io/badge/Next.js-14-black?style=for-the-badge&logo=next.js)
-![AI Powered](https://img.shields.io/badge/AI-Fraud%20Detection-blue?style=for-the-badge)
+## ✨ Key Features
 
----
+### 🤖 AI-Powered Systems
+- **Code Quality Analyzer** - Automatically detects complexity, performance issues, and applies fixes
+- **ML Model Auto-Upgrader** - Monitors performance and upgrades models automatically
+- **Anomaly Detection** - Isolation Forest algorithm for transaction fraud detection
+- **Risk Scoring** - Weighted factor model for shop/beneficiary assessment
+- **Network Analysis** - Graph algorithms for collusion pattern detection
 
-## 🎯 Problem Statement
+### 🎨 Premium UI/UX
+- **Apple-Inspired Design** - Glassmorphism effects with backdrop blur
+- **Smooth Animations** - 200-400ms transitions with ease curves
+- **Responsive Layout** - Mobile-first design for all devices
+- **Interactive Charts** - Recharts, D3.js, and Mapbox visualizations
+- **Real-time Updates** - Live data with React Query
 
-India's Public Distribution System loses **₹50,000 Crore annually** through:
-- Stock diversion and black market sales
-- Ghost/duplicate beneficiaries
-- Fake ration cards
-- Manual monitoring failures
+### 📊 Comprehensive Dashboards
+- **Administrator** - Full analytics, alerts, and system management
+- **Field Inspector** - Mobile-optimized investigation tools
+- **Beneficiary Portal** - Transaction verification and complaints
 
-Current systems are **reactive, slow, and easily manipulated**.
-
----
-
-## 💡 Our Solution
-
-**GrainSecure** is a complete AI-powered monitoring platform with:
-
-### ✅ **6 Winning Features**
-
-1. **🤖 Real-Time Digital Twin Simulator**
-   - Generates live PDS transactions every 2-5 seconds
-   - Admin can inject fraud scenarios (stock diversion, ghost beneficiaries, bulk spikes)
-   - Broadcasts updates via Socket.IO to all connected dashboards
-   - Makes judges see a "living, breathing system"
-
-2. **🧠 Explainable AI Fraud Detection**
-   - Detects 9+ fraud patterns: over-withdrawal, high frequency, periodic patterns, auth failures, quantity anomalies, geo-impossibility, duplicates, bulk spikes, stock mismatch
-   - Uses z-scores, Levenshtein similarity, statistical baselines
-   - Returns risk score (0-100), severity, evidence list, recommended action
-   - **Every alert shows WHY it was flagged**
-
-3. **🔗 Tamper-Proof Audit Chain**
-   - Cryptographic hash chaining (SHA-256)
-   - Each audit log stores: `prevHash`, `currentHash = sha256(prevHash + event + timestamp)`
-   - Auditor page verifies chain integrity
-   - **Judge-winning trust feature**
-
-4. **⚖️ Real Governance Case Workflow**
-   - Alert → Case → Investigation → Verdict
-   - Inspector assigns cases, adds notes, marks resolved
-   - Status: OPEN → ASSIGNED → INVESTIGATING → RESOLVED
-   - Verdict: FRAUD_CONFIRMED / FALSE_POSITIVE / NEED_MORE_INFO
-
-5. **📊 Role-Based Dashboards (6 Roles)**
-   - ADMIN: Real-time KPIs, charts, fraud heatmap, simulator controls
-   - INSPECTOR: Assigned cases, evidence details, verdict actions
-   - DEALER: Beneficiary verification, stock management, distribution
-   - AUDITOR: Audit logs, reports, hash chain verification
-   - BENEFICIARY: Entitlements, transaction history, dispute filing
-   - PUBLIC: Transparency dashboard (no login required)
-
-6. **🌍 Public Transparency Dashboard**
-   - Aggregated district data visible to everyone
-   - Shop compliance leaderboard
-   - Leakage prevented metrics
-   - **Open data initiative**
-
----
-
-## 🏗️ Tech Stack
-
-### Frontend
-- **Next.js 14** (App Router)
-- **React** (JavaScript + JSX, NO TypeScript)
-- **TailwindCSS** + shadcn/ui
-- **Recharts** for analytics
-- **Leaflet + OpenStreetMap** for maps
-- **Socket.IO Client** for real-time
-
-### Backend
-- **Next.js API Routes**
-- **Prisma ORM**
-- **SQLite** (production-ready for Postgres)
-- **NextAuth.js** (JWT + Credentials)
-- **Socket.IO** server
-
-### AI/ML
-- **Custom JS fraud detection engine**
-- Statistical methods (z-scores, std dev, mean)
-- Pattern recognition algorithms
-- Levenshtein similarity for duplicates
-
-### Security
-- **SHA-256 hashing** for passwords & audit chain
-- **RBAC middleware**
-- **Cryptographic audit logs**
-
----
-
-## 🚀 Setup Instructions
+## 🚀 Quick Start
 
 ### Prerequisites
-- Node.js 18+ and npm
+- Node.js 18+ 
+- PostgreSQL 14+
+- npm or yarn
 
 ### Installation
 
 ```bash
-# 1. Navigate to project
-cd GrainSecure
+# Clone repository
+git clone https://github.com/yourusername/grain_secure_sudhanshu.git
+cd grain_secure_sudhanshu
 
-# 2. Install dependencies
+# Install dependencies
 npm install
 
-# 3. Generate Prisma client & create database
-npx prisma generate
-npx prisma db push
+# Setup environment
+cp .env.example .env
+# Edit .env with your database URL
 
-# 4. Seed database with realistic data
+# Run database migrations
+npx prisma migrate dev
+
+# Seed database
 npm run seed
 
-# 5. Start development server
+# Start development server
 npm run dev
 ```
 
-The app will run at **http://localhost:3000**
+Visit `http://localhost:3000`
 
----
+## 🛠️ Available Scripts
 
-## 🔑 Demo Credentials
+```bash
+npm run dev              # Start development server
+npm run build            # Build for production
+npm run start            # Start production server
+npm run lint             # Run ESLint
+npm run seed             # Seed database with sample data
 
-| Role | Email | Password |
-|------|-------|----------|
-| **Admin** | admin@grainsecure.in | admin123 |
-| **Inspector** | inspector@grainsecure.in | inspector123 |
-| **Dealer** | dealer@grainsecure.in | dealer123 |
-| **Auditor** | auditor@grainsecure.in | auditor123 |
-| **Beneficiary** | beneficiary@grainsecure.in | beneficiary123 |
-
----
-
-## 🎬 2-Minute Demo Flow
-
-### For Judges (Live Demonstration)
-
-**Step 1: Show the Crisis** (15 sec)
-- Open landing page
-- Highlight problem: ₹50,000 Cr loss, 23% diversion
-
-**Step 2: Public Transparency** (20 sec)
-- Navigate to **Public Dashboard** (no login)
-- Show real-time stats, leakage prevented, compliance leaderboard
-- Emphasize: "Anyone can verify government data"
-
-**Step 3: Digital Twin in Action** (30 sec)
-- Login as **Admin**
-- Dashboard shows real-time KPIs, charts
-- Click **"Start Simulation"**
-- Watch transactions flow in live feed
-- Click **"💣 Inject: Stock Diversion"**
-- See alert popup immediately with evidence
-- Show AI detected it with risk score 85/100
-
-**Step 4: AI Explainability** (25 sec)
-- Click on alert
-- Show **WHY flagged**: evidence list
-  - "Stock mismatch: 85% discrepancy"
-  - "Incoming: 1000kg, Distributed: 25kg"
-- Demonstrate this isn't a black box
-
-**Step 5: Case Workflow** (20 sec)
-- Navigate to **Cases**
-- Show case status progression
-- Demonstrate inspector assignment
-- Show verdict options
-- This mimics real government operations
-
-**Step 6: Tamper-Proof Audit** (10 sec)
-- Login as **Auditor**
-- Navigate to **Audit Logs**
-- Show hash chain verification: ✅ **Integrity Verified**
-- Explain: "Every transaction cryptographically secured"
-
----
-
-## 🏆 1-Minute Pitch
-
-**"India loses ₹50,000 Crore annually in PDS leakages. Manual monitoring fails.**
-
-**GrainSecure** is a market-ready AI platform that:
-
-1. **Detects fraud in real-time** using explainable AI—9 fraud patterns, evidence-based alerts
-2. **Simulates entire PDS ecosystem** with digital twin—judges can inject fraud and watch AI catch it live
-3. **Ensures trust** with tamper-proof audit logs—cryptographic hash chaining
-4. **Manages cases** like real governance—Alert → Investigation → Verdict workflow
-5. **Provides transparency** to the public—anyone can verify government data without login
-6. **Runs on open-source stack**—Next.js, Prisma, Socket.IO—fully deployable
-
-**Impact:**
-- 60% reduction in leakage = **₹30,000 Cr saved annually**
-- 100% audit trail coverage
-- Real-time fraud detection vs. months-later audits
-
-This isn't a toy demo. **This is production-ready.**"
-
----
-
-## 🌟 Why This Wins
-
-### 1. **Judge Wow Factor**
-- **Live simulation** they can control
-- **Inject fraud → AI catches it → Creates case** in 5 seconds
-- Not slides, not mockups—**working software**
-
-### 2. **Technical Depth**
-- Explainable AI (not black box)
-- Hash-chained audit logs (cryptographic proof)
-- Real-time WebSocket architecture
-- Role-based access control
-- Case management workflow
-
-### 3. **Real-World Ready**
-- 6 distinct roles with proper RBAC
-- SQLite → Postgres migration path
-- Seeded with 400 beneficiaries, 20 shops, 10,000 transactions
-- PDF reports, public transparency, dispute handling
-
-### 4. **Social Impact**
-- Saves ₹30,000 Cr/year
-- Protects genuine beneficiaries
-- Prevents starvation from diverted grains
-- Open data for accountability
-
----
+# AI Tools
+npm run analyze-code     # Analyze code quality
+npm run analyze-code:fix # Analyze and auto-fix issues
+npm run upgrade-models   # Check and upgrade ML models
+```
 
 ## 📁 Project Structure
 
 ```
-GrainSecure/
-├── app/
-│   ├── (routes)
-│   │   ├── page.jsx                    # Landing page
-│   │   ├── login/page.jsx              # Login with role routing
-│   │   ├── admin/dashboard/page.jsx    # Admin dashboard
-│   │   ├── inspector/...               # Inspector pages
-│   │   ├── dealer/...                  # Dealer pages
-│   │   ├── auditor/...                 # Auditor pages
-│   │   ├── beneficiary/...             # Beneficiary portal
-│   │   └── public/dashboard/page.jsx   # Public transparency
-│   ├── api/
-│   │   ├── auth/[...nextauth]/         # NextAuth config
-│   │   ├── admin/dashboard/            # Admin API
-│   │   ├── simulator/control/          # Digital twin controller
-│   │   ├── simulator/inject-fraud/     # Fraud injection
-│   │   ├── socket/                     # Socket.IO server
-│   │   └── public/dashboard/           # Public API
-│   ├── layout.jsx                      # Root layout
-│   └── globals.css                     # Global styles
+grain_secure_sudhanshu/
+├── app/                      # Next.js app directory
+│   ├── admin/               # Admin dashboard
+│   ├── inspector/           # Inspector interface
+│   ├── beneficiary/         # Beneficiary portal
+│   └── api/                 # API routes
 ├── components/
-│   ├── ui/                             # shadcn/ui components
-│   └── layouts/                        # Layout components
+│   ├── ui/                  # Reusable UI components
+│   │   ├── glass-card.tsx   # Glassmorphism cards
+│   │   ├── metric-card.tsx  # Animated metrics
+│   │   └── data-table.tsx   # Enhanced tables
+│   └── charts/              # Data visualizations
+│       ├── leakage-chart.tsx
+│       └── network-graph.tsx
 ├── lib/
-│   ├── fraud-detection.js              # AI engine ⭐
-│   ├── hash.js                         # Crypto utilities
-│   ├── prisma.js                       # Prisma client
-│   └── utils.js                        # Utilities
+│   ├── ai/                  # AI systems
+│   │   ├── code-quality-analyzer.ts
+│   │   └── model-upgrader.ts
+│   └── ml/                  # ML algorithms
 ├── prisma/
-│   └── schema.prisma                   # Database schema
-├── scripts/
-│   └── seed.js                         # Data seeding
-├── middleware.js                       # Auth middleware
-├── package.json
-├── tailwind.config.js
-├── next.config.js
-└── README.md
+│   └── schema.prisma        # Database schema
+└── scripts/                 # Utility scripts
 ```
 
----
+## 🎯 Core Components
 
-## 🎯 Key Modules
+### AI Code Quality Analyzer
 
-### AI Fraud Detection Engine (`lib/fraud-detection.js`)
-- `analyzeTransaction()`: Detects 9 fraud patterns
-- `analyzeShopStock()`: Stock reconciliation
-- Returns: `{ riskScore, severity, anomalyType, evidence[], recommendedAction }`
+Automatically analyzes your codebase and suggests improvements:
 
-### Digital Twin Simulator (`api/simulator/control/`)
-- Auto-generates transactions every 2-5s
-- Runs AI analysis on each
-- Broadcasts via Socket.IO
-- Admin controls: Start/Stop/Inject Fraud
+```bash
+npm run analyze-code
+```
 
-### Audit Chain (`lib/hash.js` + AuditLog model)
-- SHA-256 hash chaining
-- Verifiable integrity
-- Append-only log
+**Features:**
+- Complexity detection
+- Performance issue identification
+- Best practice enforcement
+- Auto-fixing capabilities
+- HTML report generation
 
----
+### ML Model Auto-Upgrader
 
-## 📊 Database Overview
+Monitors and upgrades ML models automatically:
 
-**Seeded Data:**
-- 1 District (Bangalore Urban)
-- 20 FPS Shops (with lat/lng for heatmap)
-- 400 Beneficiaries (realistic names, addresses)
-- 5 Users (all roles)
-- 2,400 Entitlements (6 months × 400)
-- 10,000 Transactions (5% fraudulent)
-- ~50 Alerts (high-risk transactions)
-- ~10 Cases (with investigation status)
-- 100 Audit Logs (hash-chained)
+```bash
+npm run upgrade-models
+```
 
----
+**Features:**
+- Performance tracking
+- Hyperparameter optimization
+- A/B testing
+- Automatic deployment
+- Version management
 
-## 🔮 Future Enhancements
+### Premium UI Components
 
-- PostgreSQL for production scale
-- DeepFace integration for real face matching
-- SMS/Email notifications for alerts
-- Mobile app for field inspectors
-- Blockchain for distributed audit
-- Machine learning model training on historical data
+```tsx
+import { GlassCard, MetricCard, DataTable } from '@/components/ui';
 
----
+// Glassmorphism card
+<GlassCard variant="elevated" hover>
+  <GlassCardContent>...</GlassCardContent>
+</GlassCard>
+
+// Animated metric
+<MetricCard
+  title="Total Beneficiaries"
+  value={850000}
+  change={12.5}
+  trend="up"
+  gradient="blue"
+/>
+
+// Enhanced table
+<DataTable
+  data={data}
+  columns={columns}
+  selectable
+  pageSize={20}
+/>
+```
+
+## 📊 Database Schema
+
+8 core tables with comprehensive relationships:
+
+- **Users** - Authentication and roles
+- **Beneficiaries** - PDS recipients
+- **FairPriceShops** - Distribution outlets
+- **Transactions** - Commodity distributions
+- **StockMovements** - Inventory tracking
+- **Alerts** - Fraud detections
+- **Complaints** - Beneficiary feedback
+- **NetworkRelationships** - Collusion patterns
+
+## 🔐 Authentication
+
+Role-based access control with 3 user types:
+
+- **Administrator** - Full system access
+- **Field Inspector** - Investigation tools
+- **Beneficiary** - Personal portal
+
+## 📈 Analytics & Reporting
+
+- Leakage estimation with trends
+- Geographic analysis with maps
+- Network relationship visualization
+- PDF report generation
+- CSV data export
+
+## 🎨 Design System
+
+### Colors
+- Primary: Blue-600 (#2563eb)
+- Success: Green-600 (#16a34a)
+- Warning: Orange-600 (#ea580c)
+- Danger: Red-600 (#dc2626)
+
+### Typography
+- Font: Inter (San Francisco-inspired)
+- Scale: 48px, 36px, 24px, 20px, 16px, 14px, 12px
+
+### Spacing
+- Base: 8px grid system
+- Gaps: 16px, 24px, 32px, 48px
+
+## 🚀 Deployment
+
+### Vercel (Recommended)
+
+```bash
+# Install Vercel CLI
+npm i -g vercel
+
+# Deploy
+vercel
+
+# Set environment variables
+vercel env add DATABASE_URL
+vercel env add NEXTAUTH_SECRET
+```
+
+### Docker
+
+```bash
+# Build image
+docker build -t grainsecure .
+
+# Run container
+docker run -p 3000:3000 grainsecure
+```
+
+## 🧪 Testing
+
+```bash
+# Unit tests
+npm run test
+
+# E2E tests
+npm run test:e2e
+
+# Coverage
+npm run test:coverage
+```
+
+## 📝 API Documentation
+
+API endpoints are automatically documented with TypeScript types.
+
+### Key Endpoints
+
+- `GET /api/beneficiaries` - List beneficiaries
+- `GET /api/shops` - List fair price shops
+- `GET /api/transactions` - List transactions
+- `GET /api/alerts` - List alerts
+- `POST /api/ml/detect` - Run anomaly detection
+- `POST /api/ml/risk-score` - Calculate risk scores
+- `GET /api/analytics/leakage` - Get leakage estimates
+
+## 🤝 Contributing
+
+Contributions welcome! Please read [CONTRIBUTING.md](CONTRIBUTING.md) first.
 
 ## 📄 License
 
-MIT License - Built for Smart India Hackathon 2026
-
----
-
-## 👥 Team
-
-**Elite Full-Stack + ML Engineers**
-
-Building market-ready solutions for India's toughest problems.
-
----
+MIT License - see [LICENSE](LICENSE) file for details.
 
 ## 🙏 Acknowledgments
 
-- **Next.js** for the amazing framework
-- **Prisma** for elegant ORM
-- **shadcn/ui** for beautiful components
-- **OpenStreetMap** for free mapping
+- Built for India's Public Distribution System
+- Inspired by Apple's design philosophy
+- Powered by Next.js, Prisma, and TypeScript
+
+## 📞 Support
+
+- **Documentation:** [docs.grainsecure.com](https://docs.grainsecure.com)
+- **Issues:** [GitHub Issues](https://github.com/yourusername/grain_secure_sudhanshu/issues)
+- **Email:** support@grainsecure.com
 
 ---
 
-**Built with ❤️ for Smart India Hackathon 2026**
-
-**GrainSecure** - Because every grain matters. 🌾
+**Built with ❤️ for transparent and efficient food distribution**

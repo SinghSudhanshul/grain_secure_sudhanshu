@@ -1,7 +1,12 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { analyzeTransaction } from '@/lib/fraud-detection';
-import { broadcastTransaction, broadcastAlert, broadcastSimulatorStatus } from '@/app/api/socket/route';
+
+// Socket.IO broadcasts removed - implement with Server-Sent Events or separate WebSocket server
+const broadcastTransaction = (data) => console.log('Transaction:', data);
+const broadcastAlert = (data) => console.log('Alert:', data);
+const broadcastSimulatorStatus = (data) => console.log('Simulator status:', data);
+
 
 let simulatorInterval = null;
 let isRunning = false;
